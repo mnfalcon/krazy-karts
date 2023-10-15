@@ -29,6 +29,7 @@ void AGoKart::BeginPlay()
 	{
 		NetUpdateFrequency = 1;
 	}
+	SetReplicateMovement(false);
 }
 
 FString GetEnumText(ENetRole Role)
@@ -36,13 +37,13 @@ FString GetEnumText(ENetRole Role)
 	switch (Role)
 	{
 	case ROLE_Authority:
-		return "ROLE_Authority";
+		return "Authority";
 	case ROLE_AutonomousProxy:
-		return "ROLE_AutonomousProxy";
+		return "AutonomousProxy";
 	case ROLE_MAX:
-		return "ROLE_MAX";
+		return "MAX";
 	case ROLE_None:
-		return "ROLE_None";
+		return "None";
 	case ROLE_SimulatedProxy:
 		return "ROLE_SimulatedProxy";
 	default:
@@ -72,11 +73,21 @@ void AGoKart::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AGoKart::MoveForward(float Value)
 {
+	if (MovementComponent == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No movement component found!"));
+		return;
+	}
 	MovementComponent->SetThrottle(Value);
 }
 
 void AGoKart::MoveRight(float Value)
 {
+	if (MovementComponent == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No movement component found!"));
+		return;
+	}
 	MovementComponent->SetSteeringThrow(Value);
 }
 

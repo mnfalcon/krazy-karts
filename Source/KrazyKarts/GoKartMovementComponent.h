@@ -12,16 +12,16 @@ struct FGoKartMove
 	GENERATED_BODY()
 
 	UPROPERTY()
-	float Throttle;
+	float Throttle = 0;
 
 	UPROPERTY()
-	float SteeringThrow;
+	float SteeringThrow = 0;
 
 	UPROPERTY()
-	float DeltaTime;
+	float DeltaTime = 0;
 
 	UPROPERTY()
-	float Time;
+	float Time = 0;
 
 
 };
@@ -35,7 +35,7 @@ struct FGoKartState
 	FGoKartMove LastMove;
 
 	UPROPERTY()
-	FVector Velocity;
+	FVector Velocity = FVector::Zero();
 
 	UPROPERTY()
 	FTransform Transform;
@@ -49,6 +49,7 @@ class KRAZYKARTS_API UGoKartMovementComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGoKartMovementComponent();
+
 
 protected:
 	// Called when the game starts
@@ -67,6 +68,8 @@ public:
 	void SimulateMove(const FGoKartMove& Move);
 	
 	float GetRollingResistanceCoefficient() const;
+
+	void SetVelocity(const FVector& NewVelocity);
 
 	float GetMass() const;
 

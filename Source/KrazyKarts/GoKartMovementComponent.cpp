@@ -12,7 +12,7 @@ UGoKartMovementComponent::UGoKartMovementComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	UE_LOG(LogTemp, Warning, TEXT("Initialized Movement Component"));
 }
 
 
@@ -99,6 +99,11 @@ FGoKartMove UGoKartMovementComponent::CreateMove(float DeltaTime, float ServerTi
 float UGoKartMovementComponent::GetRollingResistanceCoefficient() const
 {
 	return RollingResistanceCoefficient;
+}
+
+void UGoKartMovementComponent::SetVelocity(const FVector& NewVelocity)
+{
+	this->Velocity = NewVelocity;
 }
 
 float UGoKartMovementComponent::GetMass() const

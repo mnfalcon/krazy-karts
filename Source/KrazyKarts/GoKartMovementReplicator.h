@@ -46,6 +46,14 @@ private:
 	
 	TArray<FGoKartMove> UnacknowledgedMoves;
 
+	float ClientTimeSinceUpdate;
+
+	float ClientTimeBetweenLastUpdates;
+
+	FTransform ClientStartTransform;
+
+	FVector ClientStartVelocity;
+	
 	UGoKartMovementComponent* MovementComponent;
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -57,6 +65,11 @@ private:
 	
 	UFUNCTION()
 	void OnRep_ServerState();
+
+	void SimulatedProxy_OnRep_ServerState();
+	void AutonomousProxy_OnRep_ServerState();
+
+	void ClientTick(float DeltaTime);
 
 		
 };
