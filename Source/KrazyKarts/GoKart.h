@@ -22,11 +22,15 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-
 	void MoveForward(float Value);
 
 	void MoveRight(float Value);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Movement", meta = (AllowPrivateAccess))
+	UGoKartMovementComponent* MovementComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = "Movement", meta = (AllowPrivateAccess))
+	UGoKartMovementReplicator* MovementReplicator;
 
 public:
 	// Called every frame
@@ -35,18 +39,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "Movement")
-	UGoKartMovementComponent* MovementComponent;
-
 	UGoKartMovementComponent* GetGoKartMovementComponent()
 	{
 		return MovementComponent;
 	}
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "Movement")
-	UGoKartMovementReplicator* MovementReplicator;
 	
+	UGoKartMovementReplicator* GetMovementReplicator()
+	{
+		return MovementReplicator;
+	}
 
-
-
+	UFUNCTION(BlueprintCallable)
+	void SetMeshOffsetRoot(USceneComponent* Root)
+	{
+		if (MovementReplicator != nullptr)
+		{
+			MovementReplicator->SetMeshOffsetRoot(Root);
+		}
+	}
 };

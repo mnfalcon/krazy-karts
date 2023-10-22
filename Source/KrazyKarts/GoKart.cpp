@@ -4,6 +4,7 @@
 #include "GoKart.h"
 #include "Components/InputComponent.h"
 #include "Engine/World.h"
+#include "Net/UnrealNetwork.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -20,6 +21,13 @@ AGoKart::AGoKart()
 		MovementReplicator->SetIsReplicated(true);
 	}
 }
+
+// any property to replicate should be marked as UPROPERTY(Replicated)
+// void AGoKart::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+// {
+// 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+// 	DOREPLIFETIME(AGoKart, MovementReplicator); 
+// }
 
 // Called when the game starts or when spawned
 void AGoKart::BeginPlay()

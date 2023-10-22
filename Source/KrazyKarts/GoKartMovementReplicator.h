@@ -7,6 +7,22 @@
 #include "Components/ActorComponent.h"
 #include "GoKartMovementReplicator.generated.h"
 
+USTRUCT()
+struct FHermiteCubicSpline
+{
+	GENERATED_BODY()
+
+	FVector StartLocation, StartDerivative, TargetLocation, TargetDerivative;
+
+	FVector InterpolateLocation(float LerpRatio) const
+	{
+		return FMath::CubicInterp(StartLocation, StartDerivative, TargetLocation, TargetDerivative, LerpRatio);
+	}
+	FVector InterpolateDerivative(float LerpRatio) const
+	{
+		return FMath::CubicInterpDerivative(StartLocation, StartDerivative, TargetLocation, TargetDerivative, LerpRatio);
+	}
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KRAZYKARTS_API UGoKartMovementReplicator : public UActorComponent
@@ -42,7 +58,23 @@ public:
 
 	void UpdateServerState(const FGoKartMove& Move);
 
+	UFUNCTION(BlueprintCallable)
+	void SetMeshOffsetRoot(USceneComponent* Root)
+	{
+		MeshOffsetRoot = Root;
+	}
+
+	USceneComponent* GetMeshOffsetRoot()
+	{
+		return MeshOffsetRoot;
+	}
+
+	virtual void BeginDestroy() override;
+
 private:
+
+	UPROPERTY()
+	USceneComponent* MeshOffsetRoot;
 	
 	TArray<FGoKartMove> UnacknowledgedMoves;
 
@@ -53,6 +85,8 @@ private:
 	FTransform ClientStartTransform;
 
 	FVector ClientStartVelocity;
+
+	float ClientSimulatedTime;
 	
 	UGoKartMovementComponent* MovementComponent;
 
@@ -68,6 +102,12 @@ private:
 
 	void SimulatedProxy_OnRep_ServerState();
 	void AutonomousProxy_OnRep_ServerState();
+	FHermiteCubicSpline CreateSpline();
+	float GetVelocityToDerivative();
+	FVector GetNewVelocity(FHermiteCubicSpline Spline, float LerpRatio);
+	void InterpolateLocation(const float& LerpRatio, const FHermiteCubicSpline& Spline) const;
+	void InterpolateDerivative(const float& LerpRatio, const FHermiteCubicSpline& Spline);
+	void InterpolateRotation(const float& LerpRatio) const;
 
 	void ClientTick(float DeltaTime);
 
